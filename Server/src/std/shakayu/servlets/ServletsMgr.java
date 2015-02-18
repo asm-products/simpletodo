@@ -1,6 +1,8 @@
 package std.shakayu.servlets;
 
 
+import std.shakayu.dbs.DB;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +17,8 @@ public class ServletsMgr {
                 throws ServletException, IOException {
             PrintWriter out = response.getWriter();
             out.println("<html><body><h1><center>Welcome to SimpleToDo!<br></center></h1></body></html>");
-
+            DB db = new DB("STD","simpletodo","simpletodo",false);
+            db.Close();
         }
     }
 
@@ -23,7 +26,7 @@ public class ServletsMgr {
         protected void doGet(HttpServletRequest request,
                              HttpServletResponse response)
                 throws ServletException, IOException {
-            response.sendRedirect("/");
+            //response.sendRedirect("/");
         }
         protected void doPost(HttpServletRequest request,
                               HttpServletResponse response)

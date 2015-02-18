@@ -5,7 +5,7 @@ package std.shakayu;
  */
 public class STDUtil {
     public static String EMPTYSTRING = "";
-    
+    public static final String  DBPATH = "DB/";
     public static boolean IsStringAvaliable(String s, boolean bCanEmpty){
         boolean bRes = false;
         if(s != null){
