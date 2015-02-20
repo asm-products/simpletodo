@@ -17,8 +17,7 @@ public class ServletsMgr {
                 throws ServletException, IOException {
             PrintWriter out = response.getWriter();
             out.println("<html><body><h1><center>Welcome to SimpleToDo!<br></center></h1></body></html>");
-            DB db = new DB("STD","simpletodo","simpletodo",false);
-            db.Close();
+
         }
     }
 
