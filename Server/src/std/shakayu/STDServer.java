@@ -5,7 +5,6 @@ import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.server.handler.RequestLogHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
-import org.eclipse.jetty.util.ssl.SslContextFactory;
 import std.shakayu.servlets.ServletsMgr;
 
 public class STDServer {

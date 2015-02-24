@@ -1,14 +1,19 @@
 package std.shakayu.dbs;
 
+import std.shakayu.STDAuth;
 import std.shakayu.STDUtil;
 
 import java.sql.*;
 import java.util.ArrayList;
 
 public class DB {
+    public static String DBNAME = "STDDB";
     private Connection connection = null;
     private Statement statement = null;
     private boolean bDebug = false;
+    public DB (boolean bDebug){
+        this(DBNAME,STDAuth.DBUSERNAME,STDAuth.DBPSW,bDebug);
+    }
     public DB (String sDBName, String sUsername, String sPwd, boolean bDebug){
         this.bDebug = bDebug;
         try {
@@ -123,18 +128,17 @@ public class DB {
         UpdateRecords(sTableName,sUpdateKey,sUpdateValue,"");
     }
     
-    public ArrayList SelectRecords(String sTableName, String sSelect, String sCondition){
-        ArrayList alRes = null;
+    public ArrayList SelectRecords(String sTableName, String sSelect, String sWhereCondition){
+        ArrayList alRes = new ArrayList();
         if(this.statement == null){
             return alRes;
         }
         if(IsTableExists(sTableName)){
-            alRes = new ArrayList();
             String sWhere;
-            if(sCondition == STDUtil.EMPTYSTRING){
+            if(sWhereCondition == STDUtil.EMPTYSTRING){
                 sWhere = "";
             }else{
-                sWhere = " WHERE " + sCondition;
+                sWhere = " WHERE " + sWhereCondition;
             }
             String sSQL = "SELECT " + sSelect + " FROM " + sTableName + sWhere + ";";
             try {
@@ -185,7 +189,7 @@ public class DB {
     }
 
     public ArrayList ExecuteQuery(String sTableName,String sSelect, String sSQL){
-        ArrayList alRes = null;
+        ArrayList alRes = new ArrayList();
         if(this.statement == null){
             return alRes;
         }
