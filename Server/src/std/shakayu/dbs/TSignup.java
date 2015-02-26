@@ -1,28 +1,27 @@
 package std.shakayu.dbs;
 
-import com.sun.tools.javac.jvm.Gen;
 import std.shakayu.STDUtil;
 
 import java.util.ArrayList;
 
 public class TSignup {
-    private static String    ID          = "ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT";
-    private static String    UID         = "UID VARCHAR(32) NOT NULL";
-    private static String    USERMAIL    = "USERMAIL VARCHAR(50) NOT NULL";
-    private static String    PSW         = "PSW VARCHAR(32) NOT NULL";
-    private static String    USERNAME    = "USERNAME VARCHAR(50) NOT NULL";
-    private static String    SALT        = "SALT VARCHAR(50) NOT NULL";
-    private static String    SOURCE      = "SOURCE INT NOT NULL";
-    private static String    TABLENAME   = "SIGNUP";
+    private static String   ID          = "ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT";
+    private static String   UID         = "UID VARCHAR(32) NOT NULL";
+    private static String   USERMAIL    = "USERMAIL VARCHAR(50) NOT NULL";
+    private static String   PSW         = "PSW VARCHAR(32) NOT NULL";
+    private static String   USERNAME    = "USERNAME VARCHAR(50) NOT NULL";
+    private static String   SALT        = "SALT VARCHAR(50) NOT NULL";
+    private static String   SOURCE      = "SOURCE INT NOT NULL";
+    private static String   TABLENAME   = "SIGNUP";
     
-    private DB              db;
-    private boolean         bDebug = false;
+    private DBUser          db;
+    private boolean         bDebug      = false;
     
     public TSignup(boolean bDebug){
-        db = new DB(bDebug);
+        db = new DBUser(bDebug);
         if(!db.IsTableExists(TABLENAME)){
             String[] signuptable = {ID,UID,USERMAIL,PSW,USERNAME,SALT,SOURCE};
-            db.CreateTable(TABLENAME,signuptable);
+            db.CreateTable(TABLENAME, signuptable);
         }
     }
 
@@ -35,20 +34,20 @@ public class TSignup {
     }
     
     private String GenSalt(){
-        return Long.toString(System.currentTimeMillis());
+        return STDUtil.CurrentTimeMillis();
         
     }
     
     private String[] GenSignupInfoArray(String sUsermail, String sPSW, String sUsername, String sSource){
         String[] tablerow = new String[7];
         String sSalt = GenSalt();
-        tablerow[0] = "NULL";//ID
-        tablerow[1] = STDUtil.DOUBLEQUOTE + GenUID(sUsermail) + STDUtil.DOUBLEQUOTE;//UID
-        tablerow[2] = STDUtil.DOUBLEQUOTE + sUsermail + STDUtil.DOUBLEQUOTE;//USERMAIL
-        tablerow[3] = STDUtil.DOUBLEQUOTE + GenPSW(sPSW, sSalt) + STDUtil.DOUBLEQUOTE;//PSW
-        tablerow[4] = STDUtil.DOUBLEQUOTE + sUsername + STDUtil.DOUBLEQUOTE;//USERNAME
-        tablerow[5] = STDUtil.DOUBLEQUOTE + sSalt + STDUtil.DOUBLEQUOTE;//SALT
-        tablerow[6] = sSource;//SOURCE
+        tablerow[0] = "NULL";                                       //0: ID
+        tablerow[1] = STDUtil.InDoubleQuote(GenUID(sUsermail));     //1: UID
+        tablerow[2] = STDUtil.InDoubleQuote(sUsermail);             //2: USERMAIL
+        tablerow[3] = STDUtil.InDoubleQuote(GenPSW(sPSW, sSalt));   //3: PSW
+        tablerow[4] = STDUtil.InDoubleQuote(sUsername);             //4: USERNAME
+        tablerow[5] = STDUtil.InDoubleQuote(sSalt);                 //5: SALT
+        tablerow[6] = sSource;                                      //6: SOURCE
         return tablerow;
     }
     
@@ -72,6 +71,21 @@ public class TSignup {
         }else{
             return STDUtil.EMPTYSTRING;
         }
+    }
+    
+    public void UpdateUsername(String sUsermail,String sNewUsername){
+        db.UpdateRecords(TABLENAME,"USERNAME",
+                STDUtil.InDoubleQuote(sNewUsername),
+                "USERMAIL='"+sUsermail+"'");
+        
+    }
+
+    public void UpdatePSW(String sUsermail,String sNewPSW){
+        String sSalt = GetSalt(sUsermail);
+        db.UpdateRecords(TABLENAME,"PSW",
+                STDUtil.InDoubleQuote(GenPSW(sNewPSW, sSalt)),
+                "USERMAIL='"+sUsermail+"'");
+
     }
 
     protected String GetSalt(String sUsermail){

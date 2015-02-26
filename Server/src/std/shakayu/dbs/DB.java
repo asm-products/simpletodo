@@ -1,19 +1,14 @@
 package std.shakayu.dbs;
 
-import std.shakayu.STDAuth;
 import std.shakayu.STDUtil;
 
 import java.sql.*;
 import java.util.ArrayList;
 
 public class DB {
-    public static String DBNAME = "STDDB";
     private Connection connection = null;
     private Statement statement = null;
     private boolean bDebug = false;
-    public DB (boolean bDebug){
-        this(DBNAME,STDAuth.DBUSERNAME,STDAuth.DBPSW,bDebug);
-    }
     public DB (String sDBName, String sUsername, String sPwd, boolean bDebug){
         this.bDebug = bDebug;
         try {
@@ -186,26 +181,6 @@ public class DB {
                 e.printStackTrace();
             }
         }
-    }
-
-    public ArrayList ExecuteQuery(String sTableName,String sSelect, String sSQL){
-        ArrayList alRes = new ArrayList();
-        if(this.statement == null){
-            return alRes;
-        }
-        if(IsTableExists(sTableName)){
-            try {
-                ResultSet rs = this.statement.executeQuery(sSQL);
-                while(rs.next()){
-                    alRes.add(rs.getObject(sSelect));
-                }
-                rs.close();
-                if(this.bDebug) System.out.println(sSQL);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return alRes;
     }
     
     public void Close(){
