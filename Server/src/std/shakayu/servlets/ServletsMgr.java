@@ -17,7 +17,31 @@ public class ServletsMgr {
                 throws ServletException, IOException {
             PrintWriter out = response.getWriter();
             out.println("<html><body><h1><center>Welcome to SimpleToDo!<br></center></h1></body></html>");
+        }
+    }
 
+    public static class SignUp extends HttpServlet {
+        protected void doGet(HttpServletRequest request,
+                             HttpServletResponse response)
+                throws ServletException, IOException {
+            response.sendRedirect("/");
+        }
+        protected void doPost(HttpServletRequest request,
+                              HttpServletResponse response)
+                throws ServletException, IOException {
+            int nAuth = ServletsUtil.CheckAuth(request);
+            
+            switch (nAuth){
+                case 1:
+                    ServletsUtil.SignUp(request);
+                    break;
+                case -1:
+                    response.sendRedirect("/login?ercode=-1");
+                    break;
+                default:
+                    response.sendRedirect("/login?ercode=0");
+                    break;
+            }
         }
     }
 
@@ -25,7 +49,7 @@ public class ServletsMgr {
         protected void doGet(HttpServletRequest request,
                              HttpServletResponse response)
                 throws ServletException, IOException {
-            //response.sendRedirect("/");
+            response.sendRedirect("/");
         }
         protected void doPost(HttpServletRequest request,
                               HttpServletResponse response)

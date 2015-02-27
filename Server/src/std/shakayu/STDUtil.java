@@ -3,12 +3,11 @@ package std.shakayu;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-/**
- * Created by yuxin on 15/2/17.
- */
 public class STDUtil {
-    public static String EMPTYSTRING = "";
-    public static String DOUBLEQUOTE = "\"";
+    public static String    EMPTYSTRING         = "";
+    public static String    DOUBLEQUOTE         = "\"";
+    public static int       HTTPPORT            = 8080;
+    public static int       HTTPSPORT           = 8443;
 
     public static String MD5(String sInput){
         try {
@@ -83,5 +82,13 @@ public class STDUtil {
             }
         }
         return bRes;
+    }
+    
+    public static String InDoubleQuote(String sContent){
+        return DOUBLEQUOTE + sContent + DOUBLEQUOTE;
+    }
+    
+    public static String CurrentTimeMillis(){
+        return Long.toString(System.currentTimeMillis());
     }
 }
