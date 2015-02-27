@@ -83,6 +83,21 @@ public class STDUtil {
         }
         return bRes;
     }
+
+    public static int CheckStringArrayAvaliable(String[] stringarray, boolean bCanItemEmpty){
+        int nRes = 0;
+        if(stringarray != null){
+            if(stringarray.length >0){
+                for(int i = 0; i<stringarray.length;i++){
+                    if(!IsStringAvaliable(stringarray[i],bCanItemEmpty)){
+                        return 0-i;
+                    }
+                }
+                nRes = 1;
+            }
+        }
+        return nRes;
+    }
     
     public static String InDoubleQuote(String sContent){
         return DOUBLEQUOTE + sContent + DOUBLEQUOTE;
@@ -90,5 +105,13 @@ public class STDUtil {
     
     public static String CurrentTimeMillis(){
         return Long.toString(System.currentTimeMillis());
+    }
+    
+    public static String MakeStringNoEmpty(String s, String sIfEmpty){
+        if(IsStringAvaliable(s,false)){
+            return s;
+        }else{
+            return sIfEmpty;
+        }
     }
 }
