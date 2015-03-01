@@ -1,5 +1,6 @@
 package std.shakayu;
 
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -112,6 +113,28 @@ public class STDUtil {
             return s;
         }else{
             return sIfEmpty;
+        }
+    }
+
+    public static String StringEncrypt(String sValue) {
+        StringBuffer sbuf = new StringBuffer(sValue);
+        byte[] bt = sbuf.reverse().toString().getBytes();
+        return byteArrayToHex(bt);
+    }
+
+    public static String StringUncrypt(String sValue) {
+        byte[] bt = HexTobyteArray(sValue);
+        StringBuffer sbuf = new StringBuffer(new String(bt,0,bt.length));
+        return sbuf.reverse().toString();
+    }
+
+    public static byte[] HexTobyteArray(String sHex){
+        return new BigInteger(sHex,16).toByteArray();
+    }
+    
+    public static void PrintDebug(String sHint, Object oValue, boolean bDebug){
+        if(bDebug){
+            System.out.println(sHint + oValue);
         }
     }
 }

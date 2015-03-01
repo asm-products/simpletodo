@@ -7,7 +7,7 @@ import std.shakayu.dbs.TSignup;
 import javax.servlet.http.HttpServletRequest;
 
 public class ServletsUtil {
-    protected static boolean    bDebug          = false;
+    protected static boolean    bDebug          = true;
     protected static int        EMAIL           = 0;
     protected static int        PSW             = 1;
     protected static int        USERNAME        = 2;
@@ -27,9 +27,10 @@ public class ServletsUtil {
     
     protected static int CheckAuth(HttpServletRequest request){
         int nRes = 1;
-        String sSession = request.getParameter("session");
-        String sUsername = request.getParameter("username");
-        String sPassword = request.getParameter("password");
+        String[] data = new String[2];
+        data[EMAIL] = request.getParameter("email");
+        data[PSW] = request.getParameter("password");
+        
         return nRes;
     }
 
@@ -45,6 +46,7 @@ public class ServletsUtil {
     protected static int SignUp(HttpServletRequest request){
         String[] data = GetSignupData(request);
         int nRes = STDUtil.CheckStringArrayAvaliable(data,false);
+        STDUtil.PrintDebug("ServletsUtil.Signup.nRes = ",(Integer)nRes,bDebug);
         if(nRes == 1){
             TSignup t = new TSignup(bDebug);
             t.InsertSignupInfo(data[EMAIL],data[PSW],data[USERNAME],data[SOURCE]);
@@ -74,21 +76,23 @@ public class ServletsUtil {
         String sUseremail = request.getParameter("email");
         int nRes = 0;
         if(!STDUtil.IsStringAvaliable(sUseremail,false)){
+            STDUtil.PrintDebug("ServletsUtil.AddItem.nRes = ",(Integer)nRes,bDebug);
             return nRes;
         }
         
         nRes = STDUtil.CheckStringArrayAvaliable(data,false);
         if(nRes == 1){
-            TSignup signuptable = new TSignup(false);
+            TSignup signuptable = new TSignup(bDebug);
             String sUID = signuptable.GetUID(sUseremail);
             signuptable.Close();
             
-            TListInfo listtable = new TListInfo(sUID,false);
+            TListInfo listtable = new TListInfo(sUID,bDebug);
             listtable.InsertItem(data[ITEMID],data[DO],data[DESCRIPTION],data[DEADLINE],
                     data[STARTTIME],data[STATUS],data[TAG],data[NEEDALARM],data[REPEATING],
                     data[LOCATION],data[PRIORITY]);
             listtable.Close();
         }
+        STDUtil.PrintDebug("ServletsUtil.AddItem.nRes = ",(Integer)nRes,bDebug);
         return nRes;
     }
 }

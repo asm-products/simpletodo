@@ -1,6 +1,7 @@
 package std.shakayu.servlets;
 
 
+import std.shakayu.STDUtil;
 import std.shakayu.dbs.DB;
 
 import javax.servlet.ServletException;
@@ -11,12 +12,15 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 public class ServletsMgr {
+    protected static boolean bDebug = true;
+    
     public static class Welcome extends HttpServlet {
         protected void doGet(HttpServletRequest request,
                              HttpServletResponse response)
                 throws ServletException, IOException {
             PrintWriter out = response.getWriter();
             out.println("<html><body><h1><center>Welcome to SimpleToDo!<br></center></h1></body></html>");
+            STDUtil.PrintDebug("ServletsMgr.Welcome.doGet: ", (String)"visited", bDebug);
         }
     }
 
@@ -24,13 +28,15 @@ public class ServletsMgr {
         protected void doGet(HttpServletRequest request,
                              HttpServletResponse response)
                 throws ServletException, IOException {
+            STDUtil.PrintDebug("ServletsMgr.SignUp.doGet: ", (String)"visited", bDebug);
             response.sendRedirect("/");
         }
+        
         protected void doPost(HttpServletRequest request,
                               HttpServletResponse response)
                 throws ServletException, IOException {
+            STDUtil.PrintDebug("ServletsMgr.SignUp.doPost: ", (String)"visited", bDebug);
             int nAuth = ServletsUtil.CheckAuth(request);
-            
             switch (nAuth){
                 case 1:
                     ServletsUtil.SignUp(request);
@@ -49,11 +55,14 @@ public class ServletsMgr {
         protected void doGet(HttpServletRequest request,
                              HttpServletResponse response)
                 throws ServletException, IOException {
+            STDUtil.PrintDebug("ServletsMgr.AddItem.doGet: ", (String)"visited", bDebug);
             response.sendRedirect("/");
         }
+        
         protected void doPost(HttpServletRequest request,
                               HttpServletResponse response)
                 throws ServletException, IOException {
+            STDUtil.PrintDebug("ServletsMgr.AddItem.doPost: ", (String)"visited", bDebug);
             int nAuth = ServletsUtil.CheckAuth(request);
             switch (nAuth){
                 case 1:

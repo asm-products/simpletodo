@@ -8,7 +8,7 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
 import std.shakayu.servlets.ServletsMgr;
 
 public class STDServer {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args){
         Server server = new Server();
         
         ServerConnector connector = new ServerConnector(server);
@@ -35,7 +35,17 @@ public class STDServer {
         context.setHandler(servlet);
 
         server.setHandler(context);
-        server.start();
-        server.join();
+        try {
+            server.start();
+        } catch (Exception e) {
+            STDUtil.PrintDebug("STDServer.main.server.start: ",(String)"exception",true);
+            e.printStackTrace();
+        }
+        try {
+            server.join();
+        } catch (InterruptedException e) {
+            STDUtil.PrintDebug("STDServer.main.server.join: ",(String)"exception",true);
+            e.printStackTrace();
+        }
     }
 }
