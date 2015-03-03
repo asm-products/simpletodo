@@ -1,5 +1,6 @@
 package std.shakayu.dbs;
 
+import std.shakayu.STDAuth;
 import std.shakayu.STDUtil;
 
 import java.sql.*;
@@ -14,7 +15,7 @@ public class DB {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             this.connection = DriverManager.getConnection(
-                    "jdbc:mysql://localhost/" + sDBName,sUsername,sPwd);
+                    "jdbc:mysql://" + STDAuth.DBHOST + sDBName,sUsername,sPwd);
             if(this.bDebug) System.out.println("DB is connected!");
             this.connection.setAutoCommit(true);
             this.statement = this.connection.createStatement();

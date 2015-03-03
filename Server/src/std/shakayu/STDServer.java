@@ -13,13 +13,13 @@ public class STDServer {
         
         ServerConnector connector = new ServerConnector(server);
         connector.setPort(STDUtil.HTTPPORT);
-        
+
         HttpConfiguration https = new HttpConfiguration();
         https.addCustomizer(new SecureRequestCustomizer());
         SslContextFactory sslContextFactory = new SslContextFactory();
         sslContextFactory.setKeyStorePath("Key/std");
-        sslContextFactory.setKeyStorePassword(STDAuth.DBUSERNAME);
-        sslContextFactory.setKeyManagerPassword(STDAuth.DBUSERNAME);
+        sslContextFactory.setKeyStorePassword(STDAuth.KEY);
+        sslContextFactory.setKeyManagerPassword(STDAuth.KEY);
         ServerConnector sslConnector = new ServerConnector(server,
                 new SslConnectionFactory(sslContextFactory, "http/1.1"),
                 new HttpConnectionFactory(https));
