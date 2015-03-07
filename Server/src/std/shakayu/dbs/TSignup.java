@@ -115,7 +115,7 @@ public class TSignup {
         }
     } 
     
-    public int CheckPSW(String sUsermail,String sPSW){
+    protected int CheckPSW(String sUsermail,String sPSW){
         String sSalt = GetSalt(sUsermail);
         String sDBPSW = GetPSW(sUsermail);
         String sInputPSW = GenPSW(sPSW,sSalt);
@@ -125,12 +125,7 @@ public class TSignup {
             return -1;
         }
     }
-    
-    public boolean IsUserExists(String sUsermail){
-        String sUID = GetUID(sUsermail);
-        return STDUtil.IsStringAvaliable(sUID,false);
-    }
-    
+
     public void Close(){
         if(db != null){
             db.Close();

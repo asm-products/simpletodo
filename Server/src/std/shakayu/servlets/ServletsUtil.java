@@ -3,8 +3,10 @@ package std.shakayu.servlets;
 import std.shakayu.STDUtil;
 import std.shakayu.dbs.TListInfo;
 import std.shakayu.dbs.TSignup;
+import std.shakayu.dbs.User;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 public class ServletsUtil {
     protected static boolean    bDebug          = true;
@@ -24,6 +26,20 @@ public class ServletsUtil {
     protected static int        REPEATING       = 9;
     protected static int        LOCATION        = 10;
     protected static int        PRIORITY        = 11;
+
+    protected static boolean CheckSession(HttpServletRequest request) {
+        HttpSession httpsession = request.getSession(false);
+        boolean bRes = false;
+        if(httpsession == null){
+            return bRes;
+        }
+        String sUserEmail = (String)httpsession.getAttribute("useremail");
+        if(STDUtil.IsStringAvaliable(sUserEmail,false)){
+            User user = new User(bDebug);
+            bRes = user.IsUserExists(sUserEmail);
+        }
+        return bRes;
+    }
     
     protected static int CheckAuth(HttpServletRequest request){
         int nRes = 1;
@@ -48,11 +64,43 @@ public class ServletsUtil {
         int nRes = STDUtil.CheckStringArrayAvaliable(data,false);
         STDUtil.PrintDebug("ServletsUtil.Signup.nRes = ",(Integer)nRes,bDebug);
         if(nRes == 1){
-            TSignup t = new TSignup(bDebug);
-            t.InsertSignupInfo(data[EMAIL],data[PSW],data[USERNAME],data[SOURCE]);
-            t.Close();
+            User user = new User(bDebug);
+            if(!user.IsUserExists(data[EMAIL])) {
+                user.InsertSignupInfo(data[EMAIL], data[PSW], data[USERNAME], data[SOURCE]);
+            }else{
+                nRes = 2;
+                STDUtil.PrintDebug("User exists.","",bDebug);
+            }
+            user.Close();
         }
         return nRes;
+    }
+
+    private static String[] GetLoginData(HttpServletRequest request){
+        String[] data = new String[PSW +1];
+        data[EMAIL] = request.getParameter("email");
+        data[PSW] = request.getParameter("password");
+        return data;
+    }
+    
+    protected static int Login(HttpServletRequest request){
+        String[] data = GetLoginData(request);
+        int nRes = STDUtil.CheckStringArrayAvaliable(data,false);
+        if(nRes == 1){
+            User user = new User(bDebug);
+            nRes = user.CanUserLogin(data[EMAIL],data[PSW]);
+            user.Close();
+            if(nRes == 1){
+                HttpSession httpsession = request.getSession(true);
+                httpsession.setAttribute("useremail", data[EMAIL]);
+            }
+        }
+        return nRes;
+    }
+    
+    protected static void Logout(HttpServletRequest request){
+        HttpSession httpsession = request.getSession(true);
+        httpsession.invalidate();
     }
     
     private static String[] GetItemData(HttpServletRequest request){

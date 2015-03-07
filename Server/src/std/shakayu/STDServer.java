@@ -32,6 +32,8 @@ public class STDServer {
         servlet.addServletWithMapping(ServletsMgr.Welcome.class, "/");
         servlet.addServletWithMapping(ServletsMgr.SignUp.class, "/signup");
         servlet.addServletWithMapping(ServletsMgr.AddItem.class, "/additem");
+        servlet.addServletWithMapping(ServletsMgr.Login.class, "/login");
+        servlet.addServletWithMapping(ServletsMgr.Logout.class, "/logout");
         context.setHandler(servlet);
 
         server.setHandler(context);
