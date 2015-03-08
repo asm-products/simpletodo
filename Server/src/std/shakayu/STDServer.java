@@ -29,7 +29,8 @@ public class STDServer {
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         ServletHandler servlet = new ServletHandler();
-        servlet.addServletWithMapping(ServletsMgr.Welcome.class, "/");
+        servlet.addServletWithMapping(ServletsMgr.Door.class, "/");
+        servlet.addServletWithMapping(ServletsMgr.Welcome.class, "/welcome");
         servlet.addServletWithMapping(ServletsMgr.SignUp.class, "/signup");
         servlet.addServletWithMapping(ServletsMgr.AddItem.class, "/additem");
         servlet.addServletWithMapping(ServletsMgr.Login.class, "/login");

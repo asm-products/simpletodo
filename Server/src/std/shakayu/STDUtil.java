@@ -9,6 +9,7 @@ public class STDUtil {
     public static String    DOUBLEQUOTE         = "\"";
     public static int       HTTPPORT            = 8080;
     public static int       HTTPSPORT           = 8443;
+    public static String   TABLENAMEPREFIX     = "LT";
 
     public static String MD5(String sInput){
         try {

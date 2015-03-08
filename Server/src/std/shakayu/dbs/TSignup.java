@@ -51,11 +51,11 @@ public class TSignup {
         return tablerow;
     }
     
-    public void InsertSignupInfo(String sUsermail, String sPSW, String sUsername, String sSource){
+    protected void InsertSignupInfo(String sUsermail, String sPSW, String sUsername, String sSource){
         db.InsertRecords(TABLENAME,GenSignupInfoArray(sUsermail,sPSW,sUsername,sSource));
     }
-    
-    public String GetUID(String sUsermail){
+
+    protected String GetUID(String sUsermail){
         ArrayList<String> sRes = db.SelectRecords(TABLENAME, "UID","USERMAIL='"+sUsermail+"'");
         if(sRes.size()!= 0){
             return sRes.get(0);
@@ -64,7 +64,7 @@ public class TSignup {
         }
     }
 
-    public String GetUsername(String sUsermail){
+    protected String GetUsername(String sUsermail){
         ArrayList<String> sRes = db.SelectRecords(TABLENAME, "USERNAME","USERMAIL='"+sUsermail+"'");
         if(sRes.size()!= 0){
             return sRes.get(0);
@@ -72,15 +72,15 @@ public class TSignup {
             return STDUtil.EMPTYSTRING;
         }
     }
-    
-    public void UpdateUsername(String sUsermail,String sNewUsername){
+
+    protected void UpdateUsername(String sUsermail,String sNewUsername){
         db.UpdateRecords(TABLENAME,"USERNAME",
                 STDUtil.InDoubleQuote(sNewUsername),
                 "USERMAIL='"+sUsermail+"'");
         
     }
 
-    public void UpdatePSW(String sUsermail,String sNewPSW){
+    protected void UpdatePSW(String sUsermail,String sNewPSW){
         String sSalt = GetSalt(sUsermail);
         db.UpdateRecords(TABLENAME,"PSW",
                 STDUtil.InDoubleQuote(GenPSW(sNewPSW, sSalt)),
@@ -97,7 +97,7 @@ public class TSignup {
         }
     }
 
-    public int GetSource(String sUsermail){
+    protected int GetSource(String sUsermail){
         ArrayList<Integer> sRes = db.SelectRecords(TABLENAME, "SOURCE","USERMAIL='"+sUsermail+"'");
         if(sRes.size()!= 0){
             return sRes.get(0);

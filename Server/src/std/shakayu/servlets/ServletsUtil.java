@@ -40,15 +40,6 @@ public class ServletsUtil {
         }
         return bRes;
     }
-    
-    protected static int CheckAuth(HttpServletRequest request){
-        int nRes = 1;
-        String[] data = new String[2];
-        data[EMAIL] = request.getParameter("email");
-        data[PSW] = request.getParameter("password");
-        
-        return nRes;
-    }
 
     private static String[] GetSignupData(HttpServletRequest request){
         String[] data = new String[SOURCE +1];
@@ -66,7 +57,7 @@ public class ServletsUtil {
         if(nRes == 1){
             User user = new User(bDebug);
             if(!user.IsUserExists(data[EMAIL])) {
-                user.InsertSignupInfo(data[EMAIL], data[PSW], data[USERNAME], data[SOURCE]);
+                user.Signup(data[EMAIL], data[PSW], data[USERNAME], data[SOURCE]);
             }else{
                 nRes = 2;
                 STDUtil.PrintDebug("User exists.","",bDebug);
@@ -119,6 +110,7 @@ public class ServletsUtil {
         data[PRIORITY] = request.getParameter("priority");
         return data;
     }
+    
     protected static int AddItem(HttpServletRequest request){
         String[] data = GetItemData(request);
         String sUseremail = request.getParameter("email");
@@ -130,17 +122,15 @@ public class ServletsUtil {
         
         nRes = STDUtil.CheckStringArrayAvaliable(data,false);
         if(nRes == 1){
-            TSignup signuptable = new TSignup(bDebug);
-            String sUID = signuptable.GetUID(sUseremail);
-            signuptable.Close();
-            
-            TListInfo listtable = new TListInfo(sUID,bDebug);
-            listtable.InsertItem(data[ITEMID],data[DO],data[DESCRIPTION],data[DEADLINE],
+            User user = new User(bDebug);
+            user.AddItem(sUseremail,data[ITEMID],data[DO],data[DESCRIPTION],data[DEADLINE],
                     data[STARTTIME],data[STATUS],data[TAG],data[NEEDALARM],data[REPEATING],
                     data[LOCATION],data[PRIORITY]);
-            listtable.Close();
+            user.Close();
         }
         STDUtil.PrintDebug("ServletsUtil.AddItem.nRes = ",(Integer)nRes,bDebug);
         return nRes;
     }
+    
+    
 }

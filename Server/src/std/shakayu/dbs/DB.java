@@ -5,6 +5,7 @@ import std.shakayu.STDUtil;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class DB {
     private Connection connection = null;
@@ -27,7 +28,7 @@ public class DB {
         }
     }
     
-    public boolean IsTableExists(String sTableName){
+    protected boolean IsTableExists(String sTableName){
         boolean bRes = false;
         if(this.connection == null){
             return bRes;
@@ -42,8 +43,8 @@ public class DB {
             return bRes;
         }
     }
-    
-    public void CreateTable(String sTableName, String[] tableinfo){
+
+    protected void CreateTable(String sTableName, String[] tableinfo){
         if(this.statement == null){
             return;
         }
@@ -62,8 +63,8 @@ public class DB {
             }
         }
     }
-    
-    public void DropTable(String sTableName){
+
+    protected void DropTable(String sTableName){
         if(this.statement == null){
             return;
         }
@@ -77,8 +78,8 @@ public class DB {
             }
         }
     }
-    
-    public void InsertRecords(String sTableName, String[] values){
+
+    protected void InsertRecords(String sTableName, String[] values){
         if(this.statement == null){
             return;
         }
@@ -98,7 +99,7 @@ public class DB {
         }
     }
 
-    public void UpdateRecords(String sTableName, String sUpdateKey, String sUpdateValue, String sCondition){
+    protected void UpdateRecords(String sTableName, String sUpdateKey, String sUpdateValue, String sCondition){
         if(this.statement == null){
             return;
         }
@@ -120,11 +121,11 @@ public class DB {
         }
     }
 
-    public void UpdateRecords(String sTableName, String sUpdateKey, String sUpdateValue){
+    protected void UpdateRecords(String sTableName, String sUpdateKey, String sUpdateValue){
         UpdateRecords(sTableName,sUpdateKey,sUpdateValue,"");
     }
-    
-    public ArrayList SelectRecords(String sTableName, String sSelect, String sWhereCondition){
+
+    protected ArrayList SelectRecords(String sTableName, String sSelect, String sWhereCondition){
         ArrayList alRes = new ArrayList();
         if(this.statement == null){
             return alRes;
@@ -151,11 +152,11 @@ public class DB {
         return alRes;
     }
 
-    public ArrayList SelectRecords(String sTableName, String sSelect){
+    protected ArrayList SelectRecords(String sTableName, String sSelect){
         return SelectRecords(sTableName,sSelect,"");
     }
 
-    public void DeleteRecords(String sTableName, String sCondition){
+    protected void DeleteRecords(String sTableName, String sCondition){
         if(this.statement == null){
             return;
         }
@@ -169,8 +170,8 @@ public class DB {
             }
         }
     }
-    
-    public void ExecuteUpdate(String sTableName, String sSQL){
+
+    protected void ExecuteUpdate(String sTableName, String sSQL){
         if(this.statement == null){
             return;
         }
@@ -183,8 +184,29 @@ public class DB {
             }
         }
     }
-    
-    public void Close(){
+
+    protected ArrayList DescribeTable(String sTableName){
+        ArrayList<String> alRes = new ArrayList<>();
+        if(this.statement == null){
+            return alRes;
+        }
+        String sSQL = "DESCRIBE " + sTableName;
+        if(IsTableExists(sTableName)) {
+            try{
+                ResultSet rs = this.statement.executeQuery(sSQL);
+                while(rs.next()){
+                    alRes.add(rs.getString("Field"));
+                }
+                rs.close();
+                if(this.bDebug) System.out.println(sSQL);
+            }catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return alRes;
+    }
+
+    protected void Close(){
         try{
             if(this.statement!=null){
                 this.statement.close();

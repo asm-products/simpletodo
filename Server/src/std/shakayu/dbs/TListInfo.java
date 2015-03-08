@@ -18,16 +18,13 @@ public class TListInfo {
     private static String   REPEATING          = "REPEATING INT NOT NULL";
     private static String   LOCATION           = "LOCATION TEXT";
     private static String   PRIORITY           = "PRIORITY INT NOT NULL";
-    private static String   TABLENAMEPREFIX    = "LT";
 
     private DBList          db;
-    private String          sWholeTablename;
     private boolean         bDebug             = false;
 
     public TListInfo(String sTablename, boolean bDebug){
         db = new DBList(bDebug);
-        sWholeTablename = SetTablename(sTablename);
-        if(!db.IsTableExists(sWholeTablename)){
+        if(!db.IsTableExists(sTablename)){
             String[] listinfotable = {  ID,
                                         ITEMID,
                                         DO,
@@ -41,12 +38,8 @@ public class TListInfo {
                                         REPEATING,
                                         LOCATION,
                                         PRIORITY    };
-            db.CreateTable(sWholeTablename, listinfotable);
+            db.CreateTable(sTablename, listinfotable);
         }
-    }
-    
-    private String SetTablename(String sTablename){
-        return TABLENAMEPREFIX+sTablename;
     }
 
     private String[] GenItemInfoArray(String sItemID, String sDo, String sDescription,
@@ -69,16 +62,16 @@ public class TListInfo {
         return tablerow;
     }
 
-    public void InsertItem(String sItemID, String sDo, String sDescription,
+    public void InsertItem(String sTablename, String sItemID, String sDo, String sDescription,
                                  String sDeadline,String sStarttime,String sStatus, String sTag,
                                  String sNeedalarm,String sRepeating,String sLoaction, String sPriority){
-        db.InsertRecords(sWholeTablename,
+        db.InsertRecords(sTablename,
                 GenItemInfoArray(sItemID, sDo, sDescription, sDeadline, sStarttime, sStatus, sTag,
                         sNeedalarm, sRepeating, sLoaction, sPriority));
     }
 
-    public String GetDo(String sItemID){
-        ArrayList<String> sRes = db.SelectRecords(sWholeTablename, "DO","ITEMID='"+sItemID+"'");
+    public String GetDo(String sTablename, String sItemID){
+        ArrayList<String> sRes = db.SelectRecords(sTablename, "DO","ITEMID='"+sItemID+"'");
         if(sRes.size()!= 0){
             return sRes.get(0);
         }else{
@@ -86,15 +79,15 @@ public class TListInfo {
         }
     }
 
-    public void UpdateDo(String sItemID,String sDo){
-        db.UpdateRecords(sWholeTablename,"DO",
+    public void UpdateDo(String sTablename, String sItemID,String sDo){
+        db.UpdateRecords(sTablename,"DO",
                 STDUtil.InDoubleQuote(sDo),
                 "ITEMID='"+sItemID+"'");
 
     }
     
-    public String GetDescription(String sItemID){
-        ArrayList<String> sRes = db.SelectRecords(sWholeTablename, 
+    public String GetDescription(String sTablename, String sItemID){
+        ArrayList<String> sRes = db.SelectRecords(sTablename,
                         "DESCRIPTION","ITEMID='"+sItemID+"'");
         if(sRes.size()!= 0){
             return sRes.get(0);
@@ -103,15 +96,15 @@ public class TListInfo {
         }
     }
 
-    public void UpdateDescription(String sItemID,String sDescription){
-        db.UpdateRecords(sWholeTablename,"DESCRIPTION",
+    public void UpdateDescription(String sTablename, String sItemID,String sDescription){
+        db.UpdateRecords(sTablename,"DESCRIPTION",
                 STDUtil.InDoubleQuote(sDescription),
                 "ITEMID='"+sItemID+"'");
 
     }
 
-    public String GetDeadline(String sItemID){
-        ArrayList<String> sRes = db.SelectRecords(sWholeTablename,
+    public String GetDeadline(String sTablename, String sItemID){
+        ArrayList<String> sRes = db.SelectRecords(sTablename,
                 "DEADLINE","ITEMID='"+sItemID+"'");
         if(sRes.size()!= 0){
             return sRes.get(0);
@@ -120,15 +113,15 @@ public class TListInfo {
         }
     }
 
-    public void UpdateDeadline(String sItemID,String sDeadline){
-        db.UpdateRecords(sWholeTablename,"DEADLINE",
+    public void UpdateDeadline(String sTablename, String sItemID,String sDeadline){
+        db.UpdateRecords(sTablename,"DEADLINE",
                 STDUtil.InDoubleQuote(sDeadline),
                 "ITEMID='"+sItemID+"'");
 
     }
 
-    public String GetStarttime(String sItemID){
-        ArrayList<String> sRes = db.SelectRecords(sWholeTablename,
+    public String GetStarttime(String sTablename, String sItemID){
+        ArrayList<String> sRes = db.SelectRecords(sTablename,
                 "STARTTIME","ITEMID='"+sItemID+"'");
         if(sRes.size()!= 0){
             return sRes.get(0);
@@ -137,15 +130,15 @@ public class TListInfo {
         }
     }
 
-    public void UpdateStarttime(String sItemID,String sStarttime){
-        db.UpdateRecords(sWholeTablename,"STARTTIME",
+    public void UpdateStarttime(String sTablename, String sItemID,String sStarttime){
+        db.UpdateRecords(sTablename,"STARTTIME",
                 STDUtil.InDoubleQuote(sStarttime),
                 "ITEMID='"+sItemID+"'");
 
     }
 
-    public String GetRecordtime(String sItemID){
-        ArrayList<String> sRes = db.SelectRecords(sWholeTablename,
+    public String GetRecordtime(String sTablename, String sItemID){
+        ArrayList<String> sRes = db.SelectRecords(sTablename,
                 "RECORDTIME","ITEMID='"+sItemID+"'");
         if(sRes.size()!= 0){
             return sRes.get(0);
@@ -154,19 +147,19 @@ public class TListInfo {
         }
     }
 
-    public void UpdateRecordtime(String sItemID,String sRecordtime){
-        db.UpdateRecords(sWholeTablename,"RECORDTIME",
+    public void UpdateRecordtime(String sTablename, String sItemID,String sRecordtime){
+        db.UpdateRecords(sTablename,"RECORDTIME",
                 STDUtil.InDoubleQuote(sRecordtime),
                 "ITEMID='"+sItemID+"'");
 
     }
 
-    public int GetStatus(String sItemID){
+    public int GetStatus(String sTablename, String sItemID){
         // return 0: delete
         // return 1: will do
         // return 2: doing
         // return 3: done
-        ArrayList<Integer> sRes = db.SelectRecords(sWholeTablename,
+        ArrayList<Integer> sRes = db.SelectRecords(sTablename,
                 "STATUS","ITEMID='"+sItemID+"'");
         if(sRes.size()!= 0){
             return sRes.get(0);
@@ -175,15 +168,15 @@ public class TListInfo {
         }
     }
 
-    public void UpdateStatus(String sItemID,String sStatus){
-        db.UpdateRecords(sWholeTablename,"STATUS",
+    public void UpdateStatus(String sTablename, String sItemID,String sStatus){
+        db.UpdateRecords(sTablename,"STATUS",
                 sStatus,
                 "ITEMID='"+sItemID+"'");
 
     }
 
-    public String GetTag(String sItemID){
-        ArrayList<String> sRes = db.SelectRecords(sWholeTablename,
+    public String GetTag(String sTablename, String sItemID){
+        ArrayList<String> sRes = db.SelectRecords(sTablename,
                 "TAG","ITEMID='"+sItemID+"'");
         if(sRes.size()!= 0){
             return sRes.get(0);
@@ -192,19 +185,19 @@ public class TListInfo {
         }
     }
 
-    public void UpdateTag(String sItemID,String sTag){
-        db.UpdateRecords(sWholeTablename,"TAG",
+    public void UpdateTag(String sTablename, String sItemID,String sTag){
+        db.UpdateRecords(sTablename,"TAG",
                 STDUtil.InDoubleQuote(sTag),
                 "ITEMID='"+sItemID+"'");
 
     }
 
-    public int GetNeedAlarm(String sItemID){
+    public int GetNeedAlarm(String sTablename, String sItemID){
         // return 0: don't alarm
         // return 1: alarm start time
         // return 2: alarm deadline
         // return 3: alarm both start time and deadline
-        ArrayList<Integer> sRes = db.SelectRecords(sWholeTablename,
+        ArrayList<Integer> sRes = db.SelectRecords(sTablename,
                 "NEEDALARM","ITEMID='"+sItemID+"'");
         if(sRes.size()!= 0){
             return sRes.get(0);
@@ -213,17 +206,17 @@ public class TListInfo {
         }
     }
 
-    public void UpdateNeedAlarm(String sItemID,String sNeedAlarm){
-        db.UpdateRecords(sWholeTablename,"NEEDALARM",
+    public void UpdateNeedAlarm(String sTablename, String sItemID,String sNeedAlarm){
+        db.UpdateRecords(sTablename,"NEEDALARM",
                 sNeedAlarm,
                 "ITEMID='"+sItemID+"'");
 
     }
 
-    public int GetRepeating(String sItemID){
+    public int GetRepeating(String sTablename, String sItemID){
         // return 0: don't repeat
         // return 1: repeat daily
-        ArrayList<Integer> sRes = db.SelectRecords(sWholeTablename,
+        ArrayList<Integer> sRes = db.SelectRecords(sTablename,
                 "REPEATING","ITEMID='"+sItemID+"'");
         if(sRes.size()!= 0){
             return sRes.get(0);
@@ -232,15 +225,15 @@ public class TListInfo {
         }
     }
 
-    public void UpdateRepeating(String sItemID,String sRepeating){
-        db.UpdateRecords(sWholeTablename,"REPEATING",
+    public void UpdateRepeating(String sTablename,String sItemID,String sRepeating){
+        db.UpdateRecords(sTablename,"REPEATING",
                 sRepeating,
                 "ITEMID='"+sItemID+"'");
 
     }
 
-    public String GetLocation(String sItemID){
-        ArrayList<String> sRes = db.SelectRecords(sWholeTablename,
+    public String GetLocation(String sTablename, String sItemID){
+        ArrayList<String> sRes = db.SelectRecords(sTablename,
                 "LOCATION","ITEMID='"+sItemID+"'");
         if(sRes.size()!= 0){
             return sRes.get(0);
@@ -249,18 +242,18 @@ public class TListInfo {
         }
     }
 
-    public void UpdateLocation(String sItemID,String sLocation){
-        db.UpdateRecords(sWholeTablename,"LOCATION",
+    public void UpdateLocation(String sTablename, String sItemID,String sLocation){
+        db.UpdateRecords(sTablename,"LOCATION",
                 STDUtil.InDoubleQuote(sLocation),
                 "ITEMID='"+sItemID+"'");
 
     }
 
-    public int GetPriority(String sItemID){
+    public int GetPriority(String sTablename, String sItemID){
         // return 0: normal
         // return 1: low
         // return 2: high
-        ArrayList<Integer> sRes = db.SelectRecords(sWholeTablename,
+        ArrayList<Integer> sRes = db.SelectRecords(sTablename,
                 "PRIORITY","ITEMID='"+sItemID+"'");
         if(sRes.size()!= 0){
             return sRes.get(0);
@@ -269,17 +262,21 @@ public class TListInfo {
         }
     }
 
-    public void UpdatePriority(String sItemID,String sPriority){
-        db.UpdateRecords(sWholeTablename,"PRIORITY",
+    public void UpdatePriority(String sTablename, String sItemID,String sPriority){
+        db.UpdateRecords(sTablename,"PRIORITY",
                 sPriority,
                 "ITEMID='"+sItemID+"'");
 
     }
     
-    public ArrayList<String> GetItemIDList(){
-        return db.SelectRecords(sWholeTablename,"ITEMID");
+    public ArrayList<String> GetItemIDList(String sTablename){
+        return db.SelectRecords(sTablename,"ITEMID");
     }
 
+    protected ArrayList GetTableSchema(String sTablename){
+        return db.DescribeTable(sTablename);
+    }
+    
     public void Close(){
         if(db != null){
             db.Close();
