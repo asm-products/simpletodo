@@ -2,7 +2,9 @@ package std.shakayu.dbs;
 
 import std.shakayu.STDUtil;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class User extends TSignup {
@@ -53,5 +55,31 @@ public class User extends TSignup {
         sSchema = list.GetTableSchema(sTable);
         list.Close();
         return sSchema;
+    }
+    
+    public ArrayList GetItemIDList(String sUserEmail){
+        String sTable = GetListTableName(sUserEmail);
+        ArrayList<String> idlist = new ArrayList<>();
+        TListInfo list = new TListInfo(sTable, bDebug);
+        idlist = list.GetItemIDList(sTable);
+        list.Close();
+        return idlist;
+    }
+    
+    public HashMap GetItemInfo(String sUserEmail, String sItemID){
+        HashMap<String, Object> iteminfo = new HashMap<>();
+        String sTable = GetListTableName(sUserEmail);
+        TListInfo list = new TListInfo(sTable, bDebug);
+        iteminfo = list.GetItemInfo(sTable, sItemID);
+        list.Close();
+        String st = iteminfo.get("ID").toString();
+        iteminfo.put("ID", st);
+        st = iteminfo.get("NEEDALARM").toString();
+        iteminfo.put("NEEDALARM",st);
+        st = iteminfo.get("REPEATING").toString();
+        iteminfo.put("REPEATING",st);
+        st = iteminfo.get("PRIORITY").toString();
+        iteminfo.put("PRIORITY",st);
+        return iteminfo;
     }
 }

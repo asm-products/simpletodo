@@ -7,6 +7,8 @@ import std.shakayu.dbs.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ServletsUtil {
     protected static boolean    bDebug          = true;
@@ -123,14 +125,43 @@ public class ServletsUtil {
         nRes = STDUtil.CheckStringArrayAvaliable(data,false);
         if(nRes == 1){
             User user = new User(bDebug);
-            user.AddItem(sUseremail,data[ITEMID],data[DO],data[DESCRIPTION],data[DEADLINE],
-                    data[STARTTIME],data[STATUS],data[TAG],data[NEEDALARM],data[REPEATING],
-                    data[LOCATION],data[PRIORITY]);
+            user.AddItem(sUseremail, data[ITEMID], data[DO], data[DESCRIPTION], data[DEADLINE],
+                    data[STARTTIME], data[STATUS], data[TAG], data[NEEDALARM], data[REPEATING],
+                    data[LOCATION], data[PRIORITY]);
             user.Close();
         }
         STDUtil.PrintDebug("ServletsUtil.AddItem.nRes = ",(Integer)nRes,bDebug);
         return nRes;
     }
-    
-    
+
+    protected static HashMap GetItemInfo(HttpServletRequest request){
+        String sUseremail = request.getParameter("email");
+        String sItemID = request.getParameter("itemid");
+        return GetItemInfo(sUseremail, sItemID);
+    }
+
+    protected static HashMap GetItemInfo(String sUseremail, String sItemID){
+        HashMap<String, String> iteminfo = new HashMap<>();
+        if(STDUtil.IsStringAvaliable(sUseremail,false) && STDUtil.IsStringAvaliable(sItemID, false)){
+            User user = new User(bDebug);
+            iteminfo = user.GetItemInfo(sUseremail,sItemID);
+            user.Close();
+        }
+        return iteminfo;
+    }
+
+    protected static ArrayList ListItemInfo(HttpServletRequest request){
+        ArrayList<HashMap> infolist = new ArrayList<>();
+        String sUserEmail = request.getParameter("email");
+        User user = new User(bDebug);
+        ArrayList<String> idlist = user.GetItemIDList(sUserEmail);
+        String sItemID = "";
+        for(int i = 0; i<idlist.size();i++){
+            sItemID = idlist.get(i);
+            HashMap info = user.GetItemInfo(sUserEmail, sItemID);
+            infolist.add(info);
+        }
+        user.Close();
+        return infolist;
+    }
 }

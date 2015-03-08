@@ -9,7 +9,7 @@ import java.util.List;
 
 public class DB {
     private Connection connection = null;
-    private Statement statement = null;
+    public Statement statement = null;
     private boolean bDebug = false;
     public DB (String sDBName, String sUsername, String sPwd, boolean bDebug){
         this.bDebug = bDebug;

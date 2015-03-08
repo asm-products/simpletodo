@@ -85,6 +85,25 @@ public class ServletsMgr {
                               HttpServletResponse response) throws ServletException, IOException{
             if(ServletsUtil.CheckSession(request)){
                 ServletsUtil.AddItem(request);
+            }else{
+                response.sendRedirect("/");
+            }
+        }
+    }
+
+    public static class ListItemInfo extends HttpServlet {
+        protected void doGet(HttpServletRequest request,
+                             HttpServletResponse response) throws ServletException, IOException{
+            STDUtil.PrintDebug("ServletsMgr.GetItemInfo.doGet: ", "visited", bDebug);
+            response.sendRedirect("/welcome");
+        }
+
+        protected void doPost(HttpServletRequest request,
+                              HttpServletResponse response) throws ServletException, IOException{
+            if(ServletsUtil.CheckSession(request)){
+                ServletsUtil.ListItemInfo(request);
+            }else{
+                response.sendRedirect("/");
             }
         }
     }

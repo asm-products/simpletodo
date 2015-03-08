@@ -33,6 +33,7 @@ public class STDServer {
         servlet.addServletWithMapping(ServletsMgr.Welcome.class, "/welcome");
         servlet.addServletWithMapping(ServletsMgr.SignUp.class, "/signup");
         servlet.addServletWithMapping(ServletsMgr.AddItem.class, "/additem");
+        servlet.addServletWithMapping(ServletsMgr.ListItemInfo.class, "/listiteminfo");
         servlet.addServletWithMapping(ServletsMgr.Login.class, "/login");
         servlet.addServletWithMapping(ServletsMgr.Logout.class, "/logout");
         context.setHandler(servlet);
