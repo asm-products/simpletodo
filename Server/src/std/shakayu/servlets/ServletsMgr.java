@@ -1,13 +1,14 @@
 package std.shakayu.servlets;
 
+import org.json.JSONObject;
 import std.shakayu.STDUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.util.*;
 
 public class ServletsMgr {
     protected static boolean bDebug = true;
@@ -101,7 +102,12 @@ public class ServletsMgr {
         protected void doPost(HttpServletRequest request,
                               HttpServletResponse response) throws ServletException, IOException{
             if(ServletsUtil.CheckSession(request)){
-                ServletsUtil.ListItemInfo(request);
+                JSONObject jItems = ServletsUtil.GetToDoItems(request);
+                PrintWriter out = response.getWriter();
+                response.setContentType("application/json;charset=utf-8");
+                response.setCharacterEncoding("utf-8");
+                out.print(jItems);
+                out.close();
             }else{
                 response.sendRedirect("/");
             }

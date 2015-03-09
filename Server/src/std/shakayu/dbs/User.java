@@ -74,6 +74,8 @@ public class User extends TSignup {
         list.Close();
         String st = iteminfo.get("ID").toString();
         iteminfo.put("ID", st);
+        st = iteminfo.get("STATUS").toString();
+        iteminfo.put("STATUS",st);
         st = iteminfo.get("NEEDALARM").toString();
         iteminfo.put("NEEDALARM",st);
         st = iteminfo.get("REPEATING").toString();

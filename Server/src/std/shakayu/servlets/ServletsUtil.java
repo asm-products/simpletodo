@@ -1,5 +1,7 @@
 package std.shakayu.servlets;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import std.shakayu.STDUtil;
 import std.shakayu.dbs.TListInfo;
 import std.shakayu.dbs.TSignup;
@@ -150,9 +152,8 @@ public class ServletsUtil {
         return iteminfo;
     }
 
-    protected static ArrayList ListItemInfo(HttpServletRequest request){
+    protected static ArrayList ListItemInfo(String sUserEmail){
         ArrayList<HashMap> infolist = new ArrayList<>();
-        String sUserEmail = request.getParameter("email");
         User user = new User(bDebug);
         ArrayList<String> idlist = user.GetItemIDList(sUserEmail);
         String sItemID = "";
@@ -163,5 +164,61 @@ public class ServletsUtil {
         }
         user.Close();
         return infolist;
+    }
+
+    private static String[] GetItemData(HashMap<String, String> iteminfo){
+        String[] data = new String[PRIORITY+1];
+        data[ITEMID] = iteminfo.get("ITEMID");
+        data[DO] = iteminfo.get("DO");
+        data[DESCRIPTION] = iteminfo.get("DESCRIPTION");
+        data[DEADLINE] = iteminfo.get("DEADLINE");
+        data[STARTTIME] = iteminfo.get("STARTTIME");
+        data[RECORDTIME] = iteminfo.get("RECORDTIME");
+        data[STATUS] = iteminfo.get("STATUS");
+        data[TAG] = iteminfo.get("TAB");
+        data[NEEDALARM] = iteminfo.get("NEEDALARM");
+        data[REPEATING] = iteminfo.get("REPEATING");
+        data[LOCATION] = iteminfo.get("LOCATION");
+        data[PRIORITY] = iteminfo.get("PRIORITY");
+        return data;
+    }
+    
+    protected static JSONObject GetToDoItems(HttpServletRequest request){
+        String sUserEmail = request.getParameter("email");
+        if(!STDUtil.IsStringAvaliable(sUserEmail,false)){
+            return null;
+        }
+        ArrayList<HashMap> items = ListItemInfo(sUserEmail);
+        if(items!=null && items.size()!=0){
+            try {
+                JSONObject jItems = new JSONObject();
+                for(int i = 0; i<items.size(); i++){
+                    HashMap<String, String> iteminfo = items.get(i);
+                    String[] data = GetItemData(iteminfo);
+                    JSONObject jItem = new JSONObject();
+                    jItem.put("ITEMID",data[ITEMID]);
+                    jItem.put("DO",data[DO]);
+                    jItem.put("DESCRIPTION",data[DESCRIPTION]);
+                    jItem.put("DEADLINE",data[DEADLINE]);
+                    jItem.put("STARTTIME",data[STARTTIME]);
+                    jItem.put("RECORDTIME",data[RECORDTIME]);
+                    jItem.put("STATUS",data[STATUS]);
+                    jItem.put("TAG",data[TAG]);
+                    jItem.put("NEEDALARM",data[NEEDALARM]);
+                    jItem.put("REPEATING",data[REPEATING]);
+                    jItem.put("LOCATION",data[LOCATION]);
+                    jItem.put("PRIORITY",data[PRIORITY]);
+                    
+                    jItems.put(data[ITEMID],jItem);
+                }
+                return jItems;
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
+            }
+            
+        }else{
+            return null;
+        }
     }
 }
