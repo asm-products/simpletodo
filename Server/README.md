@@ -1,1 +1,2 @@
 # SimpleTodo Server
+## Database Structure
